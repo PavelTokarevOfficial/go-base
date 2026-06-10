@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: go-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: go-pgweb
+    restart: unless-stopped
+    command:
+      - --bind=0.0.0.0
+      - --listen=8081
+      - --url=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    ports:
+      - "${PGWEB_PORT}:8081"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
