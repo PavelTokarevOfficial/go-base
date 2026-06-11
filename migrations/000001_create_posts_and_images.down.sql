@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS post_images;
+DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS posts;

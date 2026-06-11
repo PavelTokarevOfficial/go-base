@@ -20,14 +20,10 @@ Pgweb доступен в браузере:
 
 http://localhost:8080
 
-Авторизация не нужна: Pgweb автоматически подключается к базе `go_db`.
-
-## Настройки окружения
-
-Основные настройки лежат в `.env`.
-
-Для нового окружения можно скопировать пример:
-
+## Миграции
 ```bash
-cp .env.example .env
+migrate \
+  -path migrations \
+  -database "postgres://go_user:go_pass@127.0.0.1:5433/go_db?sslmode=disable" \
+  up
 ```
