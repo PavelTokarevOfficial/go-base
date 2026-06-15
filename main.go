@@ -3,22 +3,37 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
+	db, err := connectDB()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+
+	fmt.Println("DB connected")
+}
+
+func connectDB() (*sql.DB, error) {
 	dsn := "postgres://go_user:go_pass@127.0.0.1:5433/go_db?sslmode=disable"
+
 	db, err := sql.Open("postgres", dsn)
 
 	if err != nil {
-
-		log.Fatal(err)
+		return nil, err
 	}
-	defer db.Close()
+
 	err = db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		db.Close()
+		return nil, err
 	}
-	fmt.Println("DB connected")
+
+	return db, nil
 }
