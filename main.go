@@ -2,13 +2,14 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
+	"net/http"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	// test and connect DB
 	db, err := connectDB()
 
 	if err != nil {
@@ -17,7 +18,27 @@ func main() {
 
 	defer db.Close()
 
-	fmt.Println("DB connected")
+	// ====== api start ======
+	mux := http.NewServeMux()
+
+	// == ping ==
+	mux.HandleFunc("/api/v1/ping", pingHandler)
+
+	// == images ==
+	mux.HandleFunc("/api/v1/images", handleImages)
+	mux.HandleFunc("/api/v1/images/", handleImageByID)
+
+	// == posts ==
+
+	//create
+	//update
+	//read all
+	//read one by id
+	//delete
+
+	log.Println("server started on :8081")
+	log.Fatal(http.ListenAndServe(":8081", mux))
+	// ====== api end ======
 }
 
 func connectDB() (*sql.DB, error) {
